@@ -160,10 +160,11 @@ export default defineBackground(async () => {
 						)[0];
 						if (!tab?.id) {
 							tab = await chrome.tabs.create({
-								url: import.meta.env.DEV
-									? import.meta.env.WXT_URL_GENERADOR_DEV ??
-									  CONFIG.URL_GENERADOR_DEV
-									: CONFIG.URL_CAHUITL_ORARIUX,
+								url:
+							import.meta.env.DEV && !import.meta.env.WXT_USE_PROD
+										? import.meta.env.WXT_URL_GENERADOR_DEV ??
+										  CONFIG.URL_GENERADOR_DEV
+										: CONFIG.URL_CAHUITL_ORARIUX,
 							});
 						} else {
 							chrome.tabs.update(tab.id, { active: true });
