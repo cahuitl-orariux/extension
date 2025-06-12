@@ -1,10 +1,8 @@
+import { CONFIG } from "@/lib/Config";
 import { MENSAJES } from "@/lib/Mensajes";
 
 export default defineContentScript({
-	matches: [
-		import.meta.env.WXT_URL_CAHUITL_ORARIUX + "*",
-		"http://localhost/*",
-	],
+	matches: [CONFIG.URL_CAHUITL_ORARIUX + "*", "http://localhost/*"],
 	main: () => {
 		console.debug("Iniciando script de generador");
 		const btn = document.createElement("button");
