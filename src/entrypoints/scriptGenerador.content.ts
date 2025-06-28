@@ -5,18 +5,6 @@ export default defineContentScript({
 	matches: [CONFIG.URL_CAHUITL_ORARIUX + "*", "http://localhost/*"],
 	main: () => {
 		console.debug("Iniciando script de generador");
-		const btn = document.createElement("button");
-		btn.textContent = "📥 Obtener Dato";
-		btn.style.position = "fixed";
-		btn.style.top = "10px";
-		btn.style.left = "10px";
-		btn.style.zIndex = "9999";
-		btn.onclick = () => {
-			chrome.runtime.sendMessage({ tipo: "SOLICITAR_DATO" }, (response) => {
-				alert("Dato recibido: " + response?.dato);
-			});
-		};
-		document.body.appendChild(btn);
 
 		chrome.runtime.onMessage.addListener(
 			async (request, sender, sendResponse) => {
