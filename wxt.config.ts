@@ -5,6 +5,6 @@ export default defineConfig({
 	srcDir: "src",
 	modules: ["@wxt-dev/module-svelte"],
 	manifest: {
-		permissions: ["scripting", "storage", "tabs", "activeTab"],
+		permissions: ["storage", "tabs"],
 	},
 });
