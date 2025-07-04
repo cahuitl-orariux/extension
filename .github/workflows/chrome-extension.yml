@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: chrome-extension-${{ github.sha }}
-          path: chrome-extension-${{ github.sha }}.zip
+          path: .output/chrome-mv3/chrome-extension-${{ github.sha }}.zip
           
   # api usage reference:
   # * <https://developer.chrome.com/docs/webstore/using_webstore_api/>
