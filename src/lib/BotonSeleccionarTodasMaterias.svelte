@@ -3,12 +3,6 @@
 	import { MENSAJES } from "./Mensajes";
 	import { SELECTOR_SAES } from "./Selectores";
 
-	type Props = {
-		horariosExtraidos: Materia[];
-	};
-
-	const { horariosExtraidos }: Props = $props();
-
 	const htmlSelectTurno = document.querySelector(
 		SELECTOR_SAES.TURNO
 	) as HTMLSelectElement;

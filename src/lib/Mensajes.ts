@@ -1,4 +1,7 @@
 export const MENSAJES = {
+	/**
+	 * Mensaje para enviar los horarios del SAES al background
+	 */
 	ENVIAR_HORARIOS: "ENVIAR_HORARIOS",
 	EXTRAER_HORARIOS: "EXTRAER_HORARIOS",
 	INICIA_EXTRACCION_HORARIOS: "INICIA_EXTRACCION_HORARIOS",

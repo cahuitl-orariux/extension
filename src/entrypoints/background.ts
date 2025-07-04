@@ -4,7 +4,7 @@ import {
 	materiasFromDiccionario,
 } from "kesos-ipnsaes-api/Materias";
 import { MENSAJES as MSJ } from "@/lib/Mensajes";
-import { CONFIG } from "@/lib/Config";
+import { DEFAULT_CONFIG, CONSTANTES } from "@/lib/Config";
 
 const mensajeExtraccionHorarios = async (
 	tab: chrome.tabs.Tab,
@@ -152,19 +152,19 @@ export default defineBackground(async () => {
 							await chrome.tabs.query({
 								currentWindow: true,
 								url: [
-									CONFIG.URL_CAHUITL_ORARIUX + "*",
+									CONSTANTES.URL_CAHUITL_ORARIUX + "*",
 									(import.meta.env.URL_GENERADOR_DEV ??
-										CONFIG.URL_GENERADOR_DEV) + "*",
+										CONSTANTES.URL_GENERADOR_DEV) + "*",
 								],
 							})
 						)[0];
 						if (!tab?.id) {
 							tab = await chrome.tabs.create({
 								url:
-							import.meta.env.DEV && !import.meta.env.WXT_USE_PROD
+									import.meta.env.DEV && !import.meta.env.WXT_USE_PROD
 										? import.meta.env.WXT_URL_GENERADOR_DEV ??
-										  CONFIG.URL_GENERADOR_DEV
-										: CONFIG.URL_CAHUITL_ORARIUX,
+										  CONSTANTES.URL_GENERADOR_DEV
+										: CONSTANTES.URL_CAHUITL_ORARIUX,
 							});
 						} else {
 							chrome.tabs.update(tab.id, { active: true });

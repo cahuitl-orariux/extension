@@ -6,10 +6,11 @@ import { MENSAJES } from "@/lib/Mensajes";
 import { SELECTOR_SAES } from "@/lib/Selectores";
 import { mount } from "svelte";
 import BotonLimpiarSeleccionDeMaterias from "@/lib/BotonLimpiarSeleccionDeMaterias.svelte";
-import { CONFIG } from "@/lib/Config";
+import { CONSTANTES } from "@/lib/Config";
 
-const PAGINA_SAES = CONFIG.URL_SAES;
-const PAGINA_HORARIOS_CLASE = PAGINA_SAES + "Academica/horarios.aspx";
+const RUTA_HORARIOS_CLASE = "/Academica/horarios.aspx";
+const RUTA_EVALUACION_PROFESOR =
+	"/Alumnos/Evaluacion_Docente/evaluacion_profesor.aspx";
 
 const mapeoDiasMaterias = {
 	lunes: ["Lun"],
@@ -58,9 +59,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 		if (htmlSelectTurno.selectedIndex !== turnoIndex) {
 			htmlSelectTurno.selectedIndex = turnoIndex;
-			
-		} 
-		
+		}
+
 		if (htmlSelectPeriodo.selectedIndex !== periodoIndex) {
 			htmlSelectPeriodo.selectedIndex = periodoIndex;
 			htmlSelectPeriodo.dispatchEvent(new Event("change"));
@@ -91,9 +91,6 @@ const botones = async () => {
 
 	mount(BotonSeleccionarTodasMaterias, {
 		target: filaExtra,
-		props: {
-			horariosExtraidos: materiasPagina.materias,
-		},
 	});
 	mount(BotonLimpiarSeleccionDeMaterias, {
 		target: filaExtra,
@@ -108,59 +105,6 @@ const botones = async () => {
 			},
 		},
 	});
-
-	const btnAgregarMaterias = document.createElement("button");
-	btnAgregarMaterias.textContent = "📤 Agregar Materias";
-	btnAgregarMaterias.style.position = "fixed";
-	btnAgregarMaterias.style.top = "10px";
-	btnAgregarMaterias.style.right = "10px";
-	btnAgregarMaterias.style.zIndex = "9999";
-	btnAgregarMaterias.onclick = () => {
-		if (!horariosTable) {
-			console.log(
-				"No se pudo encontrar el elemento de horarios. Reintente más tarde o contacte con el desarrollador."
-			);
-			return;
-		}
-
-		if (materiasPagina.escuela === "") {
-			materiasPagina.escuela = window.location.hostname.split(".")[2];
-		}
-		if (materiasPagina.ciclo === "") {
-			materiasPagina.ciclo = "importado";
-		}
-
-		let materias: Materia[] = csv2json(
-			horariosTable.innerText.replaceAll("\t", ",")
-		);
-
-		materias = materias.filter(
-			(materia) =>
-				materiasPagina.materias.findIndex((m) => m.id === materia.id) === -1
-		);
-		materiasPagina.materias.push(...materias);
-
-		chrome.storage.local.set({ HORARIOS_EXTRAIDOS: materiasPagina });
-	};
-
-	const btnBorrarMaterias = document.createElement("button");
-	btnBorrarMaterias.textContent = "📤 Borrar";
-	btnBorrarMaterias.style.position = "fixed";
-	btnBorrarMaterias.style.top = "70px";
-	btnBorrarMaterias.style.right = "10px";
-	btnBorrarMaterias.style.zIndex = "9999";
-	btnBorrarMaterias.onclick = () => {
-		materiasPagina = {
-			escuela: "",
-			ciclo: "",
-			encabezados: [],
-			materias: [],
-			diccionarioMateriaIndice: {},
-		};
-		chrome.storage.local.remove(["HORARIOS_EXTRAIDOS"]);
-	};
-	document.body.appendChild(btnAgregarMaterias);
-	document.body.appendChild(btnBorrarMaterias);
 };
 
 const procesarTablaHorarios = () => {
@@ -288,10 +232,13 @@ const actualizarSeleccionDeMaterias = () => {
 };
 
 export default defineContentScript({
-	matches: [PAGINA_SAES + "*"],
+	matches: [CONSTANTES.PATRON_URL_IPN],
 	main: async () => {
-		const host = window.location.href;
-		if (host.includes(PAGINA_HORARIOS_CLASE)) {
+		// Omitir páginas que no sean saes
+		if (!window.location.origin.includes("saes")) return;
+
+		const pathname = window.location.pathname;
+		if (pathname.includes(RUTA_HORARIOS_CLASE)) {
 			try {
 				materiasPagina = procesarTablaHorarios();
 				botones();
@@ -308,6 +255,19 @@ export default defineContentScript({
 			} catch (error) {
 				console.error(error);
 			}
+		} else if (pathname.includes(RUTA_EVALUACION_PROFESOR)) {
+			document.querySelectorAll("select").forEach((select) => {
+				select.size = 3;
+			});
+			(
+				document.querySelectorAll(
+					"select > option"
+				) as NodeListOf<HTMLOptionElement>
+			).forEach((option) => {
+				if (option.value === "" || option.textContent === "") {
+					option.remove();
+				}
+			});
 		}
 	},
 });

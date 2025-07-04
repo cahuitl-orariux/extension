@@ -1,9 +1,11 @@
-import { CONFIG } from "@/lib/Config";
+import { Config, CONSTANTES, DEFAULT_CONFIG } from "@/lib/Config";
 import { MENSAJES } from "@/lib/Mensajes";
 
 export default defineContentScript({
-	matches: [CONFIG.URL_CAHUITL_ORARIUX + "*", "http://localhost/*"],
-	main: () => {
+	matches: [CONSTANTES.URL_CAHUITL_ORARIUX + "*", "http://localhost/*"],
+	main: async () => {
+		const CONFIG: Config =
+			(await chrome.storage.local.get("CONFIG")).CONFIG ?? DEFAULT_CONFIG;
 		console.debug("Iniciando script de generador");
 
 		chrome.runtime.onMessage.addListener(
