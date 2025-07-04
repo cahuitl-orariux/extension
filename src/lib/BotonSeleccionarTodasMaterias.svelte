@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { Materia } from "kesos-ipnsaes-api/Materias";
 	import { MENSAJES } from "./Mensajes";
-	import { SELECTOR_SAES } from "./Selectores";
+	import { buscarCoincidenciaAlgunSelector, SELECTOR_SAES } from "./Selectores";
 
-	const htmlSelectTurno = document.querySelector(
+	const htmlSelectTurno = buscarCoincidenciaAlgunSelector(
 		SELECTOR_SAES.TURNO
 	) as HTMLSelectElement;
-	const htmlSelectPeriodo = document.querySelector(
+	const htmlSelectPeriodo = buscarCoincidenciaAlgunSelector(
 		SELECTOR_SAES.PERIODO
 	) as HTMLSelectElement;
 

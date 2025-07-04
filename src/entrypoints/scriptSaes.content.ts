@@ -3,7 +3,10 @@ import { Materia, materiasFromDiccionario } from "kesos-ipnsaes-api/Materias";
 import CasillaVerificacion from "@/lib/CasillaVerificacion.svelte";
 import BotonSeleccionarTodasMaterias from "@/lib/BotonSeleccionarTodasMaterias.svelte";
 import { MENSAJES } from "@/lib/Mensajes";
-import { SELECTOR_SAES } from "@/lib/Selectores";
+import {
+	buscarCoincidenciaAlgunSelector,
+	SELECTOR_SAES,
+} from "@/lib/Selectores";
 import { mount } from "svelte";
 import BotonLimpiarSeleccionDeMaterias from "@/lib/BotonLimpiarSeleccionDeMaterias.svelte";
 import { CONSTANTES } from "@/lib/Config";
@@ -50,10 +53,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		let turnoIndex = message.dato.turnoIndex;
 		let periodoIndex = message.dato.periodoIndex;
 
-		const htmlSelectTurno = document.querySelector(
+		const htmlSelectTurno = buscarCoincidenciaAlgunSelector(
 			SELECTOR_SAES.TURNO
 		) as HTMLSelectElement;
-		const htmlSelectPeriodo = document.querySelector(
+		const htmlSelectPeriodo = buscarCoincidenciaAlgunSelector(
 			SELECTOR_SAES.PERIODO
 		) as HTMLSelectElement;
 
@@ -79,14 +82,15 @@ const botones = async () => {
 	// Para el caso de autenticación de usuario, la extensión tiene acceso a la cookie del usuario, esta puede ser enviada al servidor para validar que la sesión está activa en el saes, aún no sé exactamente cómo (se debe tomar en cuenta que no tenga mucha carga el server), pero podría ser una petición GET con la cookie y checar el html.
 	// Casi descartada la opción de la credencial, ya que un ataque de fuerza bruta sería muy sencillo o si alguien robara la credencial
 	const horariosTable: HTMLTableElement | null =
-		document.querySelector(SELECTOR_SAES.HORARIOS) ??
-		document.querySelector(SELECTOR_SAES.HORARIOS_MODSAES) ??
-		null;
+		(buscarCoincidenciaAlgunSelector(
+			SELECTOR_SAES.HORARIOS
+		) as HTMLTableElement) ?? null;
 	console.log("Iniciando función...");
 
 	const filaExtra = document.createElement("tr");
 	(
-		document.querySelector(SELECTOR_SAES.MAIN_COPY)?.firstChild as Element
+		buscarCoincidenciaAlgunSelector(SELECTOR_SAES.MAIN_COPY)
+			?.firstChild as Element
 	).insertAdjacentElement("afterend", filaExtra);
 
 	mount(BotonSeleccionarTodasMaterias, {
@@ -111,11 +115,9 @@ const procesarTablaHorarios = () => {
 	let materias: Materia[] = [];
 	let encabezados: string[] = [];
 	const horariosTable: HTMLTableElement | null =
-		(document.querySelector(SELECTOR_SAES.HORARIOS) as HTMLTableElement) ??
-		(document.querySelector(
-			SELECTOR_SAES.HORARIOS_MODSAES
-		) as HTMLTableElement) ??
-		null;
+		(buscarCoincidenciaAlgunSelector(
+			SELECTOR_SAES.HORARIOS
+		) as HTMLTableElement) ?? null;
 
 	if (!horariosTable) {
 		console.log(
