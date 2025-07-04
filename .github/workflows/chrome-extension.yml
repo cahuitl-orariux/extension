@@ -29,7 +29,7 @@ jobs:
 
       - name: Zip extension files 
         run: |
-          cd .output/chrome-mv3/ \
+          cd .output/chrome-mv3/
           zip -r chrome-extension-${{ github.sha }}.zip .output/chrome-mv3/
 
       - name: Archive chrome-extension artifact
