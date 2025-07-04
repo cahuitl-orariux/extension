@@ -20,6 +20,7 @@
 			dato: {
 				numeroTurnos: numeroTurnos,
 				numeroPeriodos: numeroPeriodos,
+				escuela: window.location.hostname.split(".")[2],
 			},
 		});
 	};

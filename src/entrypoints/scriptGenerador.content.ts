@@ -18,6 +18,8 @@ export default defineContentScript({
 					window.postMessage({
 						tipo: "TODAS_MATERIAS_A_GENERADOR",
 						materias: request.dato.materias,
+						escuela: request.dato.escuela + " (SAES)",
+						cicloEscolar: request.dato.ciclo,
 					});
 
 					console.debug(
@@ -27,5 +29,12 @@ export default defineContentScript({
 				}
 			}
 		);
+
+		chrome.runtime.sendMessage({
+			tipo: MENSAJES.PAGINA_CAHUITL_ORARIUX_INIT,
+			dato: {
+				autoimportarHorarios: CONFIG.AUTOIMPORTAR_HORARIOS,
+			},
+		});
 	},
 });

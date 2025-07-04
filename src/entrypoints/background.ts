@@ -5,6 +5,7 @@ import {
 } from "kesos-ipnsaes-api/Materias";
 import { MENSAJES as MSJ } from "@/lib/Mensajes";
 import { DEFAULT_CONFIG, CONSTANTES } from "@/lib/Config";
+import {Temporal} from "@js-temporal/polyfill"
 
 const mensajeExtraccionHorarios = async (
 	tab: chrome.tabs.Tab,
@@ -44,7 +45,7 @@ const mensajeActualizarHorarios = (
 
 const mensajeTodasMateriasAGenerador = async (
 	tab: chrome.tabs.Tab,
-	materias: Materia[]
+	dato: { materias: Materia[]; escuela: string; ciclo: string }
 ) => {
 	if (!tab.id) {
 		console.log("No se encontró la pestaña activa");
@@ -52,21 +53,37 @@ const mensajeTodasMateriasAGenerador = async (
 	}
 	const respuesta = await chrome.tabs.sendMessage(tab.id, {
 		tipo: MSJ.TODAS_MATERIAS_A_GENERADOR,
-		dato: {
-			materias,
-		},
+		dato: dato,
 	});
 	console.debug("Respuesta de todas las materias a generador:", respuesta);
 };
 
 export default defineBackground(async () => {
-	let extraccionHorarios = {
+	const CONFIG =
+		(await chrome.storage.local.get("CONFIG")).CONFIG ?? DEFAULT_CONFIG;
+
+	type HorariosExtraidos = {
+		turnoIndex: number;
+		periodoIndex: number;
+		numeroTurnos: number;
+		numeroPeriodos: number;
+		materias: Materia[];
+		enCurso: boolean;
+		escuela: string;
+		ciclo: string;
+	};
+
+	let extraccionHorarios: HorariosExtraidos = (
+		await chrome.storage.local.get("EXTRACCION_HORARIOS")
+	).EXTRACCION_HORARIOS ?? {
 		turnoIndex: 0,
 		periodoIndex: 0,
 		numeroTurnos: 0,
 		numeroPeriodos: 0,
 		materias: [] as Materia[],
 		enCurso: false,
+		escuela: "",
+		ciclo: "",
 	};
 
 	let materiasSeleccionadas: Materia[] =
@@ -75,7 +92,7 @@ export default defineBackground(async () => {
 
 	chrome.runtime.onMessage.addListener(
 		async (message, sender, sendResponse) => {
-			if (sender?.tab === undefined) {
+			if (sender?.tab?.id === undefined) {
 				console.log("No se encontró la pestaña activa");
 				return;
 			}
@@ -88,6 +105,8 @@ export default defineBackground(async () => {
 					extraccionHorarios.numeroTurnos = message.dato.numeroTurnos;
 					extraccionHorarios.numeroPeriodos = message.dato.numeroPeriodos;
 					extraccionHorarios.enCurso = true;
+					extraccionHorarios.escuela = message.dato.escuela;
+					extraccionHorarios.ciclo = "Guardado: " + Temporal.Now.plainDateISO().toLocaleString();
 					mensajeActualizarHorarios(sender.tab, 0, 0);
 					break;
 				}
@@ -147,7 +166,11 @@ export default defineBackground(async () => {
 						extraccionHorarios.enCurso = false;
 						console.log("Se ha finalizado la extracción de horarios");
 						console.debug(extraccionHorarios);
-						console.info(import.meta.env.WXT_URL_GENERADOR_DEV);
+
+						chrome.storage.local.set({
+							EXTRACCION_HORARIOS: extraccionHorarios,
+						});
+
 						let tab = (
 							await chrome.tabs.query({
 								currentWindow: true,
@@ -168,15 +191,12 @@ export default defineBackground(async () => {
 							});
 						} else {
 							chrome.tabs.update(tab.id, { active: true });
+							await mensajeTodasMateriasAGenerador(tab, {
+								materias: extraccionHorarios.materias,
+								escuela: extraccionHorarios.escuela,
+								ciclo: extraccionHorarios.ciclo,
+							});
 						}
-
-						// TODO: Evaluar si extraer esto a otro mensaje, que el script de generador pueda llamar después de terminar de cargar la página y que acá se evalúe si es necesario enviar algún mensaje
-						await new Promise((resolve) => setTimeout(resolve, 2000));
-
-						await mensajeTodasMateriasAGenerador(
-							tab,
-							extraccionHorarios.materias
-						);
 					}
 					mensajeActualizarHorarios(
 						sender.tab,
@@ -209,6 +229,19 @@ export default defineBackground(async () => {
 						MATERIAS_SELECCIONADAS: materiasSeleccionadas,
 					});
 					break;
+				}
+				case MSJ.PAGINA_CAHUITL_ORARIUX_INIT: {
+					if (
+						!message.dato.autoimportarHorarios ||
+						extraccionHorarios.materias.length === 0
+					)
+						return;
+
+					await mensajeTodasMateriasAGenerador(sender.tab, {
+						materias: extraccionHorarios.materias,
+						escuela: extraccionHorarios.escuela,
+						ciclo: extraccionHorarios.ciclo,
+					});
 				}
 			}
 		}

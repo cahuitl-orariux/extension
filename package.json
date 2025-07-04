@@ -2,7 +2,7 @@
   "name": "Cahuitl Orariux",
   "description": "Extensión para la página de generación de horarios del IPN SAES: Cahuitl Orariux",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",
@@ -15,6 +15,7 @@
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
+    "@js-temporal/polyfill": "^0.5.1",
     "@tsconfig/svelte": "^5.0.4",
     "@types/chrome": "^0.0.323",
     "@types/papaparse": "^5.3.16",

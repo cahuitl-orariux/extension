@@ -20,4 +20,9 @@ export const MENSAJES = {
 	 */
 	LIMPIAR_MATERIAS_SELECCIONADAS: "LIMPIAR_MATERIAS_SELECCIONADAS",
 	TODAS_MATERIAS_A_GENERADOR: "TODAS_MATERIAS_A_GENERADOR",
+	/**
+	 * Anunciar inicio de la extensión en la página de cahuitl-orariux.
+	 *
+	 */
+	PAGINA_CAHUITL_ORARIUX_INIT: "PAGINA_CAHUITL_ORARIUX_INIT",
 };
