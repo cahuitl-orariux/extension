@@ -64,8 +64,8 @@ jobs:
       - name: Upload step
         run: |-
           chrome-webstore-upload upload \\
-            --source chrome-extension-${{ github.event.pull_request.head.sha }}.zip \\
-            --extension-id ${{ env.EXTENSION_ID }} \\
-            --client-id ${{ secrets.CI_GOOGLE_CLIENT_ID }} \\
-            --client-secret ${{ secrets.CI_GOOGLE_CLIENT_SECRET }} \\
-            --refresh-token ${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}
+            --source chrome-extension-${{ github.event.pull_request.head.sha }}.zip
+        env:
+          CLIENT_ID: ${{ secrets.CI_GOOGLE_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CI_GOOGLE_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}
