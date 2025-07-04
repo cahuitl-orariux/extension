@@ -13,7 +13,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22.x"
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+          
       - name: Build
         run: |-
           pnpm install
@@ -40,9 +48,9 @@ jobs:
       EXTENSION_ID: hlecingfnjghblaegbicfejhghbladkn
 
     steps:
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v3
         with:
-          node-version: "16.10"
+          node-version: "22.x"
 
       - name: Download bundle artifact
         uses: actions/download-artifact@v3
@@ -51,7 +59,7 @@ jobs:
 
       - name: Install webstore cli
         run: |-
-          pnpm install -g chrome-webstore-upload-cli
+          npm install -g chrome-webstore-upload-cli
 
       - name: Upload step
         run: |-
