@@ -8,6 +8,21 @@ export default defineContentScript({
 			(await chrome.storage.local.get("CONFIG")).CONFIG ?? DEFAULT_CONFIG;
 		console.debug("Iniciando script de generador");
 
+		window.addEventListener("message", (event) => {
+
+			// Manejo de msj desde la página cahuitl-orariux para burbujearlo al background
+			if (event.data.tipo === MENSAJES.PAGINA_CAHUITL_ORARIUX_INIT) {
+				console.debug("Recibido mensaje de inicio de pagina cahuitl-orariux");
+				console.debug(event.data.dato);
+				chrome.runtime.sendMessage({
+					tipo: MENSAJES.PAGINA_CAHUITL_ORARIUX_INIT,
+					dato: {
+						autoimportarHorarios: CONFIG.AUTOIMPORTAR_HORARIOS,
+					},
+				});
+			}
+		});
+
 		chrome.runtime.onMessage.addListener(
 			async (request, sender, sendResponse) => {
 				if (request.tipo === MENSAJES.TODAS_MATERIAS_A_GENERADOR) {
@@ -29,12 +44,5 @@ export default defineContentScript({
 				}
 			}
 		);
-
-		chrome.runtime.sendMessage({
-			tipo: MENSAJES.PAGINA_CAHUITL_ORARIUX_INIT,
-			dato: {
-				autoimportarHorarios: CONFIG.AUTOIMPORTAR_HORARIOS,
-			},
-		});
 	},
 });
