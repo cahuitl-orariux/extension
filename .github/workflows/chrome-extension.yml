@@ -41,7 +41,7 @@ jobs:
   # api usage reference:
   # * <https://developer.chrome.com/docs/webstore/using_webstore_api/>
   # * <https://github.com/fregante/chrome-webstore-upload/blob/main/How%20to%20generate%20Google%20API%20keys.md>
-  upload-extension:
+  upload-publish-extension:
     name: Upload extension
     runs-on: ubuntu-latest
     needs: build-chrome-extension
@@ -65,9 +65,9 @@ jobs:
         run: |-
           npm install -g chrome-webstore-upload-cli
 
-      - name: Upload step
+      - name: Upload/Publish step
         run: |-
-          chrome-webstore-upload upload \
+          chrome-webstore-upload \
             --source chrome-extension-${{ github.sha }}.zip
         env:
           CLIENT_ID: ${{ secrets.CI_GOOGLE_CLIENT_ID }}
