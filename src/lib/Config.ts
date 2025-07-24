@@ -5,9 +5,13 @@ export const CONSTANTES = {
 };
 
 export type Config = {
+	version: number;
 	AUTOIMPORTAR_HORARIOS: boolean;
+	SINCRONIZAR_SELECCION_CAHUITL: boolean;
 };
 
 export const DEFAULT_CONFIG: Config = {
+	version: 1,
 	AUTOIMPORTAR_HORARIOS: true,
+	SINCRONIZAR_SELECCION_CAHUITL: false,
 };

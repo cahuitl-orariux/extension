@@ -29,6 +29,6 @@
 			},
 		});
 
-                console.debug(`Respuesta: ${respuesta}`);
+                console.debug(`Respuesta: ${JSON.stringify(respuesta)}`);
 	}}
 />

@@ -19,10 +19,14 @@ export const MENSAJES = {
 	 * Mensaje para limpiar la lista de materias seleccionadas
 	 */
 	LIMPIAR_MATERIAS_SELECCIONADAS: "LIMPIAR_MATERIAS_SELECCIONADAS",
-	TODAS_MATERIAS_A_GENERADOR: "TODAS_MATERIAS_A_GENERADOR",
+	TODAS_MATERIAS_A_CAHUITL: "TODAS_MATERIAS_A_GENERADOR",
 	/**
 	 * Anunciar inicio de la extensión en la página de cahuitl-orariux.
 	 *
 	 */
 	PAGINA_CAHUITL_ORARIUX_INIT: "PAGINA_CAHUITL_ORARIUX_INIT",
+	/**
+	 * Mensaje para enviar la selección de materias a la página de cahuitl-orariux
+	 */
+	SELECCION_A_CAHUITL: "SELECCION_A_CAHUITL",
 };

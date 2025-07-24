@@ -1,19 +1,18 @@
 <script lang="ts">
-	import IconoPapelera from "./IconoPapelera.svelte";
-
-	type Props = {
-		limpieza: () => void;
-	};
-
-	const { limpieza }: Props = $props();
+	import IconoExportar from "./IconoExportar.svelte";
+	import { MENSAJES as MSJS } from "./Mensajes";
 
 	const exportarMaterias = (event: Event) => {
 		event.preventDefault();
-		limpieza();
+		chrome.runtime.sendMessage({
+			tipo: MSJS.SELECCION_A_CAHUITL,
+		});
 	};
 </script>
 
-<button onclick={exportarMaterias}> <IconoPapelera /> Vaciar selección </button>
+<button onclick={exportarMaterias}>
+	<IconoExportar /> Exportar selección</button
+>
 
 <style>
 	button {
@@ -22,8 +21,7 @@
 		gap: 2px;
 		border-radius: 5px;
 		padding: 2px;
-		color: white;
-		background-color: #800000;
+		background-color: #ff9900;
 	}
 	button:hover {
 		background-color: #e4e4e4;
@@ -32,9 +30,5 @@
 	button:active {
 		opacity: 80%;
 		transform: scale(0.95);
-	}
-
-	button:hover :global(svg) {
-		fill: #800000;
 	}
 </style>

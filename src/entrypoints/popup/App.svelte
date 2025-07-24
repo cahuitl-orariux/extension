@@ -1,40 +1,54 @@
 <script lang="ts">
-  import svelteLogo from '../../assets/svelte.svg'
 </script>
 
 <main>
-  <div>
-    <a href="https://wxt.dev" target="_blank" rel="noreferrer">
-      <img src="/icon.svg" class="logo" alt="Logo Cahuitl Orariux" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>WXT + Svelte</h1>
+	<h2>Con cariño de Kesos y compañía para toda la raza del IPN</h2>
+	<h3>
+		<a href="https://cahuitl-orariux.github.io" target="_blank" rel="noreferrer"
+			>Página principal</a
+		>
+	</h3>
+	<h3>
+		<a
+			href="https://chromewebstore.google.com/detail/hlecingfnjghblaegbicfejhghbladkn?utm_source=item-share-cb"
+			target="_blank"
+			rel="noreferrer">Extensión para Chrome</a
+		>
+	</h3>
+	<details>
+		<summary>Contacto</summary>
 
-  <div class="card">
-  </div>
-
-  <p class="read-the-docs">
-    Click on the WXT and Svelte logos to learn more
-  </p>
+		<p>
+			Sugerencias, comentarios, errores, etc. puedes mandarme un correo a <a
+				href="mailto:kesosdev@gmail.com">kesosdev@gmail.com</a
+			>
+		</p>
+		<p>
+			O si eres programador, este proyecto es de código abierto y puedes
+			encontrar el código en <a
+				href="https://github.com/cahuitl-orariux"
+				target="_blank"
+				rel="noreferrer">GitHub</a
+			>
+		</p>
+	</details>
+	<details>
+		<summary>Créditos</summary>
+		<p>Wilpan con la lógica y otros.</p>
+		<p>
+			Todos los que me retroalimentaron en el proceso de desarrollo y pruebas
+			&lt;3
+		</p>
+	</details>
 </main>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
+  main {
+    
   }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #54bc4ae0);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
+	summary {
+		font-size: 1.5em;
+		font-weight: bold;
+		margin-bottom: 1em;
+	}
 </style>

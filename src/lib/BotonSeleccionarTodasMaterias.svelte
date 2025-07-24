@@ -1,4 +1,5 @@
 <script lang="ts">
+	import IconoExportar from "./IconoExportar.svelte";
 	import { MENSAJES } from "./Mensajes";
 	import { buscarCoincidenciaAlgunSelector, SELECTOR_SAES } from "./Selectores";
 
@@ -26,5 +27,21 @@
 </script>
 
 <button onclick={exportarMaterias}>
-	📤 Exportar todas las materias de esta carrera
+	<IconoExportar /> Exportar todas las materias de esta carrera
 </button>
+
+<style>
+	button {
+		border-radius: 5px;
+		padding: 2px;
+		background-color: #e4e4e4;
+	}
+	button:hover {
+		background-color: #e4e4e4;
+		color: #800000;
+	}
+	button:active {
+		opacity: 80%;
+		transform: scale(0.95);
+	}
+</style>

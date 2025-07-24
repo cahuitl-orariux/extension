@@ -9,7 +9,6 @@ export default defineContentScript({
 		console.debug("Iniciando script de generador");
 
 		window.addEventListener("message", (event) => {
-
 			// Manejo de msj desde la página cahuitl-orariux para burbujearlo al background
 			if (event.data.tipo === MENSAJES.PAGINA_CAHUITL_ORARIUX_INIT) {
 				console.debug("Recibido mensaje de inicio de pagina cahuitl-orariux");
@@ -25,22 +24,33 @@ export default defineContentScript({
 
 		chrome.runtime.onMessage.addListener(
 			async (request, sender, sendResponse) => {
-				if (request.tipo === MENSAJES.TODAS_MATERIAS_A_GENERADOR) {
-					console.log("Recibido mensaje de todas las materias a generador");
-					console.debug(request.dato);
-					sendResponse({ dato: "Dato recibido: " + request.dato });
+				switch (request.tipo) {
+					case MENSAJES.TODAS_MATERIAS_A_CAHUITL: 
+						console.log("Recibido mensaje de todas las materias a generador");
+						console.debug(request.dato);
+						sendResponse({ dato: "Dato recibido: " + request.dato });
 
-					window.postMessage({
-						tipo: "TODAS_MATERIAS_A_GENERADOR",
-						materias: request.dato.materias,
-						escuela: request.dato.escuela + " (SAES)",
-						cicloEscolar: request.dato.ciclo,
-					});
+						window.postMessage({
+							tipo: "TODAS_MATERIAS_A_GENERADOR",
+							materias: request.dato.materias,
+							escuela: request.dato.escuela + " (SAES)",
+							cicloEscolar: request.dato.ciclo,
+						});
 
-					console.debug(
-						"Respuesta de todas las materias a generador:",
-						request
-					);
+						console.debug(
+							"Respuesta de todas las materias a generador:",
+							request
+						);
+						break;
+					case MENSAJES.SELECCION_A_CAHUITL:
+						console.log("Recibido mensaje de selección a cahuitl");
+						console.debug(request.dato);
+						sendResponse({ dato: "Dato recibido: " + request.dato });
+
+						window.postMessage({
+							tipo: "SELECCION_A_CAHUITL",
+							seleccionadas: request.dato.seleccionadas,
+						});
 				}
 			}
 		);

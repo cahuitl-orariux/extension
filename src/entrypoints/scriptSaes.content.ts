@@ -10,6 +10,7 @@ import {
 import { mount } from "svelte";
 import BotonLimpiarSeleccionDeMaterias from "@/lib/BotonLimpiarSeleccionDeMaterias.svelte";
 import { CONSTANTES } from "@/lib/Config";
+import NavbarHorarios from "@/lib/NavbarHorarios.svelte";
 
 const RUTA_HORARIOS_CLASE = "/Academica/horarios.aspx";
 const RUTA_EVALUACION_PROFESOR =
@@ -93,10 +94,7 @@ const botones = async () => {
 			?.firstChild as Element
 	).insertAdjacentElement("afterend", filaExtra);
 
-	mount(BotonSeleccionarTodasMaterias, {
-		target: filaExtra,
-	});
-	mount(BotonLimpiarSeleccionDeMaterias, {
+	mount(NavbarHorarios, {
 		target: filaExtra,
 		props: {
 			limpieza: () => {
@@ -106,6 +104,11 @@ const botones = async () => {
 				});
 				materiasSeleccionadas = [];
 				actualizarSeleccionDeMaterias();
+			},
+			exportarSeleccion: () => {
+				chrome.runtime.sendMessage({
+					tipo: MENSAJES.SELECCION_A_CAHUITL,
+				});
 			},
 		},
 	});
